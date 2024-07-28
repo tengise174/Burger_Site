@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import Burger from "../../components/Burger";
 
 class BurgerBuilder extends Component {
     render() {
         return (
             <div>
-                <div>Hachirtai talh</div>
+                <Burger />
                 <div>Ortsnii udirdlaga</div>
             </div>
         )
