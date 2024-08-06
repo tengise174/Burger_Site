@@ -9,7 +9,7 @@ const OrderSummary = props => {
                 {Object.keys(props.ingredients).map(el =>
                     <li key={el}>{props.ingredientsNames[el]}: {props.ingredients[el]}</li>)}
             </ul>
-
+            <p><strong>Захиалгын дүн: {props.price}₮</strong></p>
             <p>Цаашаа үргэлжлүүлэх үү?</p>
         </div>)
 }
