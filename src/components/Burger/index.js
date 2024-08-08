@@ -17,7 +17,7 @@ const Burger = (props) => {
 
 
     if (content.length === 0)
-        content = <p>Hachirtai talhnii ortsiig songono uu</p>;
+        content = <p>Хачиртай талхны орцыг сонгоно уу ...</p>;
 
     return (
         <div className={css.Burger}>
