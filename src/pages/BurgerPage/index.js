@@ -4,6 +4,7 @@ import BuildControls from "../../components/BuildControls";
 import Modal from "../../components/General/Modal";
 import OrderSummary from "../../components/OrderSummary";
 import axios from "../../axios-orders";
+import Spinner from "../../components/General/Spinner";
 
 const INGREDIENT_PRICES = {
     salad: 150,
@@ -32,7 +33,27 @@ class BurgerPage extends Component {
         totalPrice: 1000,
 
         purchasing: false,
-        confirmOrder: false
+        confirmOrder: false,
+        lastCustomerName: 'N/A',
+        loading: false
+    };
+
+    componentDidMount = () => {
+        this.setState({ loading: true });
+
+        axios.get('/orders.json').then(response => {
+            let arr = Object.entries(response.data);
+            arr = arr.reverse();
+            arr.forEach(el => {
+                console.log(el[1].hayag.name + '==>' + el[1].dun);
+            });
+
+            const lastOrder = arr[arr.length - 1][1];
+
+            this.setState({ lastCustomerName: lastOrder.hayag.name, ingredients: lastOrder.orts, totalPrice: lastOrder.dun });
+        }).catch(err => console.log(err)).finally(() => {
+            this.setState({ loading: false })
+        })
     };
 
     continueOrder = () => {
@@ -40,14 +61,17 @@ class BurgerPage extends Component {
             orts: this.state.ingredients,
             dun: this.state.totalPrice,
             hayag: {
-                name: 'Saraa',
+                name: 'Tengis',
                 city: 'Ub',
                 street: '10r horoolol 23-12'
             }
         }
 
+        this.setState({ loading: true });
         axios.post('/orders.json', order).then(response => {
-            alert("Amjilttai hadgallaa");
+
+        }).finally(() => {
+            this.setState({ loading: false });
         });
     }
 
@@ -93,13 +117,19 @@ class BurgerPage extends Component {
                 <Modal
                     closeConfirmModal={this.closeConfirmModal}
                     show={this.state.confirmOrder}>
-                    <OrderSummary
+
+                    {this.state.loading ? <Spinner /> : <OrderSummary
                         onCancel={this.closeConfirmModal}
                         onContinue={this.continueOrder}
                         price={this.state.totalPrice}
                         ingredientsNames={INGREDIENT_NAMES}
-                        ingredients={this.state.ingredients} />
+                        ingredients={this.state.ingredients} />}
+
                 </Modal>
+
+                {this.state.loading && <Spinner />}
+
+                <p style={{ width: '100%', textAlign: "center", fontSiz: '28px' }}>Сүүлчийн захиалагч: {this.state.lastCustomerName}</p>
                 <Burger orts={this.state.ingredients} />
                 <BuildControls
                     showConfirmModal={this.showConfirmModal}
